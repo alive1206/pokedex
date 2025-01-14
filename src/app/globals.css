@@ -25,3 +25,17 @@
 body {
   font-family: "Roboto", sans-serif;
 }
+
+.ant-pagination-item-active {
+  border-color: rgb(253 224 71 / 1) !important;
+  background-color: rgb(253 224 71 / 1) !important;
+  font-weight: 400 !important;
+}
+
+.ant-pagination-item-active a {
+  color: black !important;
+}
+
+.ant-pagination-item:hover {
+  background-color: rgb(253 224 71 / 1) !important;
+}

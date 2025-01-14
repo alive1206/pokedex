@@ -8,7 +8,7 @@ export const MainLayout: React.FC<Props> = ({ children }) => {
   return (
     <div className="h-screen">
       <Header />
-      <div className="h-[calc(100vh-104px)] relative top-[150px] container  overflow-x-hidden overflow-y-auto">
+      <div className="h-[calc(100vh-200px)] relative z-1 top-[150px] overflow-x-hidden overflow-y-auto container">
         {children}
       </div>
     </div>

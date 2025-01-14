@@ -1,31 +1,167 @@
 "use client";
 
-import { useDataQuery } from "@/hooks";
+import { useDataQueries, useDataQuery } from "@/hooks";
 import { MainLayout } from "@/layouts";
 import { map } from "lodash";
+import {
+  Button,
+  Col,
+  Divider,
+  Form,
+  Input,
+  Pagination,
+  Row,
+  Select,
+} from "antd";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { HeartFilled, HeartOutlined } from "@ant-design/icons";
 
 export const HomeViews = () => {
-  const { data: pokemonList } = useDataQuery({
-    url: "/generation/1",
-    dependencies: ["GET_POKEMON_LIST"],
+  const [data, setData] = useState<any[]>();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const keyword = searchParams?.get("keyword");
+  const gen = searchParams?.get("gen") || "1";
+  const page = searchParams?.get("page") || 1;
+  const pathname = usePathname();
+
+  const [form] = Form.useForm();
+
+  const { data: pokemonsList } = useDataQuery({
+    url: `/generation/${gen}`,
+    dependencies: ["GET_POKEMON_LIST", gen],
   });
 
-  console.log(pokemonList?.pokemon_species);
+  const filteredPokemons = pokemonsList?.pokemon_species?.filter(
+    (pokemon: any) =>
+      pokemon.name.toLowerCase().includes(keyword?.toLowerCase() || "")
+  );
+
+  console.log(filteredPokemons);
+
+  const pokemonsMetaQueries = useDataQueries({
+    url: `/pokemon`,
+    dependencies: ["GET_POKEMON_META"],
+    itemList: filteredPokemons
+      ?.slice(Number(page) * 10 - 10, Number(page) * 10)
+      ?.map((species: any) => {
+        const id = species.url.match(/\/(\d+)\/$/)?.[1];
+        return id ? { id } : null;
+      }),
+    enabled: !!pokemonsList,
+  });
+
+  const pokemonsMetaList = Object.values(pokemonsMetaQueries).map(
+    (pkm: any) => pkm.data
+  );
+
+  useEffect(() => {
+    form.setFieldsValue({
+      keyword,
+      gen,
+    });
+
+    if (JSON.stringify(data) !== JSON.stringify(pokemonsMetaList)) {
+      setData(pokemonsMetaList);
+    }
+  }, [form, keyword, gen, pokemonsMetaList]);
 
   return (
     <MainLayout>
       <div className="flex-1">
-        <div className="w-full h-full">
-          <div className="text-center font-bold">Gen: </div>
-          <div>Search</div>
-          <div className="">
-            {map(pokemonList?.pokemon_species, (pokemon) => (
-              <div key={pokemon.name}>
-                <div>{pokemon.name}</div>
+        <div className="w-full h-full overflow-y-hidden overflow-x-hidden">
+          <Form
+            form={form}
+            layout="horizontal"
+            onFinish={(values) => {
+              const query = {
+                ...(values.keyword && { keyword: values.keyword }),
+                ...(values.gen && { gen: values.gen }),
+              };
+              const params = new URLSearchParams({
+                ...query,
+                page: 1,
+              });
+
+              router.push(`${pathname}?${params.toString()}`);
+            }}
+          >
+            <Row gutter={16}>
+              <Col span={6}>
+                <Form.Item label="Search" name="keyword">
+                  <Input className="w-full" />
+                </Form.Item>
+              </Col>
+              <Col span={4}>
+                <Form.Item label="Gen" name="gen">
+                  <Select
+                    className="w-full"
+                    options={[
+                      { value: "1", label: "1" },
+                      { value: "2", label: "2" },
+                      { value: "3", label: "3" },
+                      { value: "4", label: "4" },
+                      { value: "5", label: "5" },
+                      { value: "6", label: "6" },
+                      { value: "7", label: "7" },
+                      { value: "8", label: "8" },
+                      { value: "9", label: "9" },
+                    ]}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Button
+                  type="primary"
+                  className="bg-yellow-300 text-black mr-2 w-1/4 hover:!bg-yellow-400"
+                  htmlType="submit"
+                >
+                  Search
+                </Button>
+                <Button htmlType="button" onClick={() => router.push(pathname)}>
+                  Clear
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+          <div className="grid grid-cols-5 gap-16">
+            {map(data, (pokemon) => (
+              <div
+                className="border w-full h-full flex flex-col items-center rounded-lg shadow-md relative py-10 overflow-x-hidden overflow-y-auto cursor-pointer group"
+                key={pokemon?.id}
+              >
+                <img
+                  className="w-20 h-20 mb-2 pt-4 group-hover:scale-150 transition-transform duration-200"
+                  src={`${pokemon?.sprites?.other?.showdown?.front_default}`}
+                />
+                <Divider />
+                <div className="uppercase font-semibold">{pokemon?.name}</div>
+                <div className="border rounded-[50%] absolute z-10 hover:scale-125 transition-transform duration-200 right-0 bottom-16 shadow-md bg-white">
+                  <HeartOutlined className="p-4" />
+                  {/* <HeartFilled className="p-4 text-red-500" /> */}
+                </div>
               </div>
             ))}
           </div>
-          <div></div>
+          <div className="flex justify-center pt-6">
+            <Pagination
+              showSizeChanger={false}
+              current={Number(page) || 1}
+              onChange={(page) => {
+                const query = {
+                  ...(keyword && { keyword: keyword }),
+                  ...(gen && { gen: gen }),
+                };
+                const params = new URLSearchParams({
+                  ...query,
+                  page: String(page),
+                });
+                router.push(`${pathname}?${params.toString()}`);
+              }}
+              total={filteredPokemons?.length}
+            />
+          </div>
         </div>
       </div>
     </MainLayout>

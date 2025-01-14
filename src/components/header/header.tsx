@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 
 export const Header = () => {
   const className =
-    "flex gap-2 text-lg rounded-lg bg-yellow-300 p-2 hover:bg-yellow-300";
+    "flex gap-2 font-semibold text-lg rounded-lg bg-yellow-300 p-2 hover:!bg-yellow-300";
   const path = usePathname();
 
   return (
@@ -17,7 +17,7 @@ export const Header = () => {
         <ul className="list-none flex gap-4">
           <li>
             <Link
-              className={`${className} ${path === "/" ? "" : "bg-slate-100"}`}
+              className={`${className} ${path === "/" ? "" : "!bg-slate-100"}`}
               href="/"
             >
               <HomeFilled />
@@ -27,7 +27,7 @@ export const Header = () => {
           <li>
             <Link
               className={`${className} ${
-                path === "/favorites" ? "" : "bg-slate-100"
+                path === "/favorites" ? "" : "!bg-slate-100"
               }`}
               href="/favorites"
             >
