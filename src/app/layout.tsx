@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { MainLayout } from "@/layouts";
 import { AppProvider } from "@/providers";
+import { POKEBALL } from "@public/index";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

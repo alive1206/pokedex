@@ -4,6 +4,7 @@ import { useDataQuery } from "@/hooks";
 import { MainLayout } from "@/layouts";
 import { POKEMON_TYPE } from "@/utils";
 import { ArrowRightOutlined } from "@ant-design/icons";
+import { Skeleton } from "antd";
 import { map } from "lodash";
 import Link from "next/link";
 
@@ -91,10 +92,14 @@ export const DetailViews: React.FC<Props> = ({ id }) => {
             <div>
               <div className="font-semibold">{"(1st Form)"}</div>
               <Link href={`/detail/${firstForm?.id}`}>
-                <img
-                  className="w-20 h-20 mb-3"
-                  src={`${firstForm?.sprites?.other?.showdown?.front_default}`}
-                />
+                {firstForm?.sprites?.other?.showdown?.front_default ? (
+                  <img
+                    className="w-20 h-20 mb-3"
+                    src={`${firstForm?.sprites?.other?.showdown?.front_default}`}
+                  />
+                ) : (
+                  <Skeleton.Image active />
+                )}
 
                 <div className="capitalize text-center font-semibold">
                   {firstForm?.name}
@@ -109,10 +114,14 @@ export const DetailViews: React.FC<Props> = ({ id }) => {
               <ArrowRightOutlined className="max-[576px]:rotate-90 max-[576px]:self-center" />
               <Link href={`/detail/${secondForm?.id}`}>
                 <div className="font-semibold">{"(2nd Form)"}</div>
-                <img
-                  className="w-20 h-20 mb-3"
-                  src={`${secondForm?.sprites?.other?.showdown?.front_default}`}
-                />
+                {secondForm?.sprites?.other?.showdown?.front_default ? (
+                  <img
+                    className="w-20 h-20 mb-3"
+                    src={`${secondForm?.sprites?.other?.showdown?.front_default}`}
+                  />
+                ) : (
+                  <Skeleton.Image active />
+                )}
 
                 <div className="capitalize text-center font-semibold">
                   {secondForm?.name}
@@ -127,11 +136,14 @@ export const DetailViews: React.FC<Props> = ({ id }) => {
               <ArrowRightOutlined className="max-[576px]:rotate-90 max-[576px]:self-center" />
               <Link href={`/detail/${thirdForm?.id}`}>
                 <div className="font-semibold">{"(3rd Form)"}</div>
-                <img
-                  className="w-20 h-20 mb-3"
-                  src={`${thirdForm?.sprites?.other?.showdown?.front_default}`}
-                />
-
+                {thirdForm?.sprites?.other?.showdown?.front_default ? (
+                  <img
+                    className="w-20 h-20 mb-3"
+                    src={`${thirdForm?.sprites?.other?.showdown?.front_default}`}
+                  />
+                ) : (
+                  <Skeleton.Image active />
+                )}
                 <div className="capitalize text-center  font-semibold">
                   {thirdForm?.name}
                 </div>

@@ -12,6 +12,7 @@ import {
   Pagination,
   Row,
   Select,
+  Skeleton,
 } from "antd";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -129,15 +130,25 @@ export const HomeViews = () => {
             {map(data, (pokemon) => (
               <div
                 className="border w-full h-full flex flex-col items-center rounded-lg shadow-md relative py-10 overflow-hidden cursor-pointer group"
-                key={pokemon?.id}
+                key={pokemon?.id || pokemon?.name}
               >
-                <img
-                  className="w-20 h-20 mb-2 pt-4 group-hover:scale-150 transition-transform duration-200"
-                  src={`${pokemon?.sprites?.other?.showdown?.front_default}`}
-                  onClick={() => router.push(`/detail/${pokemon.id}`)}
-                />
+                {pokemon?.sprites?.other?.showdown?.front_default ? (
+                  <img
+                    className="w-20 h-20 mb-2 pt-4 group-hover:scale-150 transition-transform duration-200"
+                    src={`${pokemon?.sprites?.other?.showdown?.front_default}`}
+                    onClick={() => router.push(`/detail/${pokemon.id}`)}
+                  />
+                ) : (
+                  <Skeleton.Image active />
+                )}
                 <Divider />
-                <div className="capitalize font-semibold">{pokemon?.name}</div>
+                {pokemon?.name ? (
+                  <div className="capitalize font-semibold">
+                    {pokemon?.name}
+                  </div>
+                ) : (
+                  <Skeleton.Input active />
+                )}
                 <div className="border rounded-[50%] absolute z-10 hover:scale-125 transition-transform duration-200 right-0 bottom-16 shadow-md bg-white">
                   {checkFavorites(pokemon) === true ? (
                     <HeartFilled
