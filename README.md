@@ -31,4 +31,4 @@ pnpm dev
 
 ## Demo
 
-[Live Demo](pokedex-black-mu.vercel.app)
+[Live Demo](https://pokedex-black-mu.vercel.app/)
