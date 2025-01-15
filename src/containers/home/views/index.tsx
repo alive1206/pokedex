@@ -66,7 +66,7 @@ export const HomeViews = () => {
     if (JSON.stringify(data) !== JSON.stringify(pokemonsMetaList)) {
       setData(pokemonsMetaList);
     }
-  }, [form, keyword, gen, pokemonsMetaList]);
+  }, [form, keyword, gen, pokemonsMetaList, data]);
 
   return (
     <MainLayout>
@@ -137,6 +137,7 @@ export const HomeViews = () => {
                     className="w-20 h-20 mb-2 pt-4 group-hover:scale-150 transition-transform duration-200"
                     src={`${pokemon?.sprites?.other?.showdown?.front_default}`}
                     onClick={() => router.push(`/detail/${pokemon.id}`)}
+                    alt=""
                   />
                 ) : (
                   <Skeleton.Image active />

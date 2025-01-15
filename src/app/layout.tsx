@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "@/providers";
-import { POKEBALL } from "@public/index";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Pokedex",
+  description: "Pokewiki",
 };
 
 export default function RootLayout({

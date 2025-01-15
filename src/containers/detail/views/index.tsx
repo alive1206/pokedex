@@ -7,12 +7,11 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import { Skeleton } from "antd";
 import { map } from "lodash";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
-type Props = {
-  id: string;
-};
+export const DetailViews = () => {
+  const { id } = useParams();
 
-export const DetailViews: React.FC<Props> = ({ id }) => {
   const { data: PokemonMeta } = useDataQuery({
     url: `/pokemon/${id}`,
     dependencies: ["GET_POKEMON_META", id],
@@ -55,16 +54,13 @@ export const DetailViews: React.FC<Props> = ({ id }) => {
     dependencies: ["GET_POKEMON_THIRD_FORM", thirdFormName],
   });
 
-  console.log("1st", firstForm);
-  console.log("2nd", secondForm);
-  console.log("3rd", thirdForm);
-
   return (
     <MainLayout>
       <div className="w-full flex flex-col items-center ">
         <img
           className="w-32 h-32 mb-3"
           src={`${PokemonMeta?.sprites?.other?.showdown?.front_default}`}
+          alt=""
         />
 
         <div className="capitalize text-center text-3xl font-semibold">
@@ -96,6 +92,7 @@ export const DetailViews: React.FC<Props> = ({ id }) => {
                   <img
                     className="w-20 h-20 mb-3"
                     src={`${firstForm?.sprites?.other?.showdown?.front_default}`}
+                    alt=""
                   />
                 ) : (
                   <Skeleton.Image active />
@@ -118,6 +115,7 @@ export const DetailViews: React.FC<Props> = ({ id }) => {
                   <img
                     className="w-20 h-20 mb-3"
                     src={`${secondForm?.sprites?.other?.showdown?.front_default}`}
+                    alt=""
                   />
                 ) : (
                   <Skeleton.Image active />
@@ -140,6 +138,7 @@ export const DetailViews: React.FC<Props> = ({ id }) => {
                   <img
                     className="w-20 h-20 mb-3"
                     src={`${thirdForm?.sprites?.other?.showdown?.front_default}`}
+                    alt=""
                   />
                 ) : (
                   <Skeleton.Image active />

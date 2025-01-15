@@ -37,7 +37,6 @@ export const removeFavorites = (item: any) => {
     const newList = currentFavorites.filter(
       (object: any) => object.id !== item.id
     );
-    console.log(newList);
     localStorage.setItem("favorites", JSON.stringify(newList));
   }
 };

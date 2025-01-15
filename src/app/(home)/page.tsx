@@ -1,3 +1,10 @@
 import { HomeViews } from "@/containers";
+import { Suspense } from "react";
 
-export default HomeViews;
+export default function HomeScreen() {
+  return (
+    <Suspense>
+      <HomeViews />
+    </Suspense>
+  );
+}
