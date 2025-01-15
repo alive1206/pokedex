@@ -1,4 +1,4 @@
-import { Header } from "@/components";
+import { Footer, Header } from "@/components";
 
 type Props = {
   children: React.ReactNode;
@@ -6,11 +6,12 @@ type Props = {
 
 export const MainLayout: React.FC<Props> = ({ children }) => {
   return (
-    <div className="h-screen">
+    <div className="h-full">
       <Header />
-      <div className="h-[calc(100vh-200px)] relative z-1 top-[150px] overflow-x-hidden overflow-y-auto container">
+      <div className="min-h-[calc(100vh-178px-150px)] relative z-1 top-[150px] container px-4 max-[576px]:pb-16">
         {children}
       </div>
+      <Footer />
     </div>
   );
 };

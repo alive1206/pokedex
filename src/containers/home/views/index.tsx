@@ -1,6 +1,6 @@
 "use client";
 
-import { useDataQueries, useDataQuery } from "@/hooks";
+import { useDataQueries, useDataQuery, useFavoritesAction } from "@/hooks";
 import { MainLayout } from "@/layouts";
 import { map } from "lodash";
 import {
@@ -25,6 +25,8 @@ export const HomeViews = () => {
   const gen = searchParams?.get("gen") || "1";
   const page = searchParams?.get("page") || 1;
   const pathname = usePathname();
+  const { handleFavorites, removeFavorites, checkFavorites } =
+    useFavoritesAction();
 
   const [form] = Form.useForm();
 
@@ -37,8 +39,6 @@ export const HomeViews = () => {
     (pokemon: any) =>
       pokemon.name.toLowerCase().includes(keyword?.toLowerCase() || "")
   );
-
-  console.log(filteredPokemons);
 
   const pokemonsMetaQueries = useDataQueries({
     url: `/pokemon`,
@@ -70,7 +70,7 @@ export const HomeViews = () => {
   return (
     <MainLayout>
       <div className="flex-1">
-        <div className="w-full h-full overflow-y-hidden overflow-x-hidden">
+        <div className="w-full h-full relative">
           <Form
             form={form}
             layout="horizontal"
@@ -88,12 +88,12 @@ export const HomeViews = () => {
             }}
           >
             <Row gutter={16}>
-              <Col span={6}>
+              <Col span={24} lg={6}>
                 <Form.Item label="Search" name="keyword">
                   <Input className="w-full" />
                 </Form.Item>
               </Col>
-              <Col span={4}>
+              <Col span={24} lg={4}>
                 <Form.Item label="Gen" name="gen">
                   <Select
                     className="w-full"
@@ -111,7 +111,7 @@ export const HomeViews = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={24} lg={8}>
                 <Button
                   type="primary"
                   className="bg-yellow-300 text-black mr-2 w-1/4 hover:!bg-yellow-400"
@@ -125,26 +125,36 @@ export const HomeViews = () => {
               </Col>
             </Row>
           </Form>
-          <div className="grid grid-cols-5 gap-16">
+          <div className="grid grid-cols-5 mt-8 gap-16 max-[1200px]:grid-cols-4 max-[992px]:grid-cols-3 max-sm:grid-cols-2 max-[576px]:grid-cols-1">
             {map(data, (pokemon) => (
               <div
-                className="border w-full h-full flex flex-col items-center rounded-lg shadow-md relative py-10 overflow-x-hidden overflow-y-auto cursor-pointer group"
+                className="border w-full h-full flex flex-col items-center rounded-lg shadow-md relative py-10 overflow-hidden cursor-pointer group"
                 key={pokemon?.id}
               >
                 <img
                   className="w-20 h-20 mb-2 pt-4 group-hover:scale-150 transition-transform duration-200"
                   src={`${pokemon?.sprites?.other?.showdown?.front_default}`}
+                  onClick={() => router.push(`/detail/${pokemon.id}`)}
                 />
                 <Divider />
-                <div className="uppercase font-semibold">{pokemon?.name}</div>
+                <div className="capitalize font-semibold">{pokemon?.name}</div>
                 <div className="border rounded-[50%] absolute z-10 hover:scale-125 transition-transform duration-200 right-0 bottom-16 shadow-md bg-white">
-                  <HeartOutlined className="p-4" />
-                  {/* <HeartFilled className="p-4 text-red-500" /> */}
+                  {checkFavorites(pokemon) === true ? (
+                    <HeartFilled
+                      className="p-4 text-red-500"
+                      onClick={() => removeFavorites(pokemon)}
+                    />
+                  ) : (
+                    <HeartOutlined
+                      className="p-4"
+                      onClick={() => handleFavorites(pokemon)}
+                    />
+                  )}
                 </div>
               </div>
             ))}
           </div>
-          <div className="flex justify-center pt-6">
+          <div className="flex justify-center py-6">
             <Pagination
               showSizeChanger={false}
               current={Number(page) || 1}
